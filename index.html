@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anushka Sharma</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fdf6f9;
+  --sidebar-bg: #f7eef3;
+  --tab-bar: #f2e4ec;
+  --tab-active: #fdf6f9;
+  --panel-bg: #fdf6f9;
+  --border: #e8d5e1;
+  --border-light: #f0e2eb;
+  --text: #2d1f28;
+  --text-muted: #9b7a8a;
+  --text-dim: #c4a8b5;
+  --accent: #c9547a;
+  --accent-soft: #e8a0b8;
+  --accent-bg: #fce8f0;
+  --green: #7ab87a;
+  --blue: #7a9ec9;
+  --orange: #c9937a;
+  --yellow: #c9b87a;
+  --string: #c9547a;
+  --keyword: #9b5fc9;
+  --comment: #c4a8b5;
+  --func: #7a9ec9;
+  --number: #c9937a;
+  --type: #7ab87a;
+  --line-height: 22px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+/* ── TITLE BAR ── */
+.title-bar {
+  height: 36px;
+  background: var(--tab-bar);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 8px;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.traffic-lights {
+  display: flex;
+  gap: 6px;
+  margin-right: 8px;
+}
+
+.traffic-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.tl-red { background: #ff6b6b; }
+.tl-yellow { background: #ffd93d; }
+.tl-green { background: #6bcb77; }
+
+.title-bar-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 0 auto;
+  letter-spacing: 0.05em;
+}
+
+/* ── MENU BAR ── */
+.menu-bar {
+  height: 28px;
+  background: var(--tab-bar);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.menu-item {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 2px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.menu-item:hover { background: var(--border-light); color: var(--text); }
+
+/* ── MAIN LAYOUT ── */
+.ide-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── ACTIVITY BAR ── */
+.activity-bar {
+  width: 44px;
+  background: var(--tab-bar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.activity-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 16px;
+  transition: all 0.15s;
+  position: relative;
+}
+.activity-icon:hover { color: var(--text); background: var(--border-light); }
+.activity-icon.active { color: var(--accent); }
+.activity-icon.active::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  width: 2px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 0 2px 2px 0;
+}
+
+.activity-bottom {
+  margin-top: auto;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 220px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 10px 14px 6px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-light);
+  font-weight: 500;
+}
+
+.sidebar-section {
+  padding: 4px 0;
+}
+
+.sidebar-folder {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 14px;
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.sidebar-folder span { font-size: 10px; }
+
+.sidebar-file {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px 4px 28px;
+  font-size: 12px;
+  color: var(--text);
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.1s;
+  user-select: none;
+}
+.sidebar-file:hover { background: var(--border-light); }
+.sidebar-file.active { background: var(--accent-bg); color: var(--accent); }
+
+.file-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-pink { background: var(--accent); }
+.dot-blue { background: var(--blue); }
+.dot-green { background: var(--green); }
+.dot-orange { background: var(--orange); }
+.dot-yellow { background: var(--yellow); }
+.dot-purple { background: var(--keyword); }
+.dot-white { background: var(--text-dim); border: 1px solid var(--border); }
+
+/* ── EDITOR AREA ── */
+.editor-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── TAB BAR ── */
+.tab-bar {
+  height: 36px;
+  background: var(--tab-bar);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-end;
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  height: 34px;
+  border-right: 1px solid var(--border);
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--tab-bar);
+  white-space: nowrap;
+  transition: all 0.15s;
+  user-select: none;
+  flex-shrink: 0;
+}
+.tab:hover { color: var(--text); background: var(--border-light); }
+.tab.active {
+  background: var(--tab-active);
+  color: var(--text);
+  border-bottom: 2px solid var(--accent);
+  height: 35px;
+}
+
+/* ── EDITOR CONTENT ── */
+.editor-content {
+  flex: 1;
+  overflow-y: auto;
+  display: none;
+  padding: 0;
+}
+.editor-content.active { display: flex; }
+
+/* scrollbar */
+.editor-content::-webkit-scrollbar { width: 8px; }
+.editor-content::-webkit-scrollbar-track { background: transparent; }
+.editor-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.line-numbers {
+  padding: 20px 0;
+  min-width: 44px;
+  text-align: right;
+  color: var(--text-dim);
+  font-size: 12px;
+  line-height: var(--line-height);
+  user-select: none;
+  padding-right: 16px;
+  padding-left: 12px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-light);
+}
+
+.code-area {
+  padding: 20px 0 20px 20px;
+  flex: 1;
+  line-height: var(--line-height);
+  font-size: 13px;
+}
+
+/* ── SYNTAX ── */
+.kw { color: var(--keyword); font-weight: 500; }
+.str { color: var(--string); }
+.fn { color: var(--func); }
+.num { color: var(--number); }
+.cm { color: var(--comment); font-style: italic; }
+.ty { color: var(--type); }
+.op { color: var(--text-muted); }
+.prop { color: var(--accent); }
+.indent1 { padding-left: 20px; display: block; }
+.indent2 { padding-left: 40px; display: block; }
+.indent3 { padding-left: 60px; display: block; }
+
+.code-line {
+  display: block;
+  white-space: pre;
+  min-height: var(--line-height);
+}
+
+.code-line:hover { background: rgba(201, 84, 122, 0.04); }
+
+/* ── HOME PANEL ── */
+.home-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 80px;
+  overflow-y: auto;
+}
+
+.home-comment {
+  font-size: 13px;
+  color: var(--comment);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+.home-name {
+  font-family: 'Newsreader', serif;
+  font-size: clamp(52px, 7vw, 88px);
+  font-weight: 300;
+  line-height: 1;
+  color: var(--text);
+  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+}
+
+.home-name .pink { color: var(--accent); font-style: italic; }
+
+.home-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.home-tag {
+  font-size: 11px;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: var(--sidebar-bg);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.home-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+.home-bio {
+  font-family: 'Newsreader', serif;
+  font-size: 19px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-muted);
+  max-width: 580px;
+  line-height: 1.6;
+  margin: 8px 0 32px;
+}
+
+.home-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 36px;
+  max-width: 540px;
+}
+
+.stat-cell {
+  background: var(--bg);
+  padding: 16px 20px;
+  text-align: center;
+}
+
+.stat-val {
+  font-family: 'Newsreader', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--accent);
+  line-height: 1;
+  font-style: italic;
+}
+
+.stat-lbl {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.home-btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 9px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+}
+
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: #b8446a; }
+.btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--sidebar-bg); border-color: var(--accent-soft); }
+
+.home-connect {
+  margin-top: 32px;
+  display: flex;
+  gap: 16px;
+}
+
+.connect-link {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.15s;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+}
+.connect-link:hover { color: var(--accent); border-color: var(--accent-soft); }
+
+/* ── STATUS BAR ── */
+.status-bar {
+  height: 22px;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.status-item {
+  font-size: 10px;
+  color: rgba(255,255,255,0.85);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  letter-spacing: 0.03em;
+}
+
+.status-right { margin-left: auto; display: flex; gap: 16px; }
+
+/* ── COPILOT PANEL ── */
+.copilot-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(45, 31, 40, 0.3);
+  z-index: 100;
+  display: none;
+  backdrop-filter: blur(2px);
+}
+
+.copilot-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 360px;
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 101;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.copilot-overlay.open { display: block; }
+.copilot-overlay.open .copilot-panel { transform: translateX(0); }
+
+.copilot-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--sidebar-bg);
+}
+
+.copilot-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.copilot-avatar {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--accent), var(--keyword));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.copilot-name { font-size: 13px; font-weight: 500; }
+.copilot-sub { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+
+.copilot-close {
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+.copilot-close:hover { background: var(--border-light); color: var(--text); }
+
+.copilot-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.copilot-greeting {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.copilot-greeting .big-avatar {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--accent-bg), var(--accent-soft));
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.copilot-greeting h3 { font-size: 14px; margin-bottom: 6px; }
+.copilot-greeting p { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+
+.copilot-suggestions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.suggestion-chip {
+  background: var(--sidebar-bg);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1.4;
+}
+.suggestion-chip:hover { border-color: var(--accent-soft); background: var(--accent-bg); color: var(--accent); }
+
+.copilot-messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.msg {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.msg-user .msg-bubble {
+  background: var(--accent);
+  color: white;
+  align-self: flex-end;
+  border-radius: 12px 12px 2px 12px;
+}
+
+.msg-ai .msg-bubble {
+  background: var(--sidebar-bg);
+  border: 1px solid var(--border);
+  align-self: flex-start;
+  border-radius: 12px 12px 12px 2px;
+}
+
+.msg-bubble {
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  max-width: 90%;
+}
+
+.msg-label { font-size: 9px; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
+.msg-user .msg-label { text-align: right; }
+
+.copilot-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--sidebar-bg);
+}
+
+.copilot-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.copilot-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.copilot-input:focus { border-color: var(--accent-soft); }
+.copilot-input::placeholder { color: var(--text-dim); }
+
+.copilot-send {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.copilot-send:hover { background: #b8446a; }
+
+.copilot-hint {
+  font-size: 9px;
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: 8px;
+  letter-spacing: 0.05em;
+}
+
+/* ── PAGE SECTIONS ── */
+.section-panel {
+  padding: 32px 48px 48px;
+  max-width: 900px;
+}
+
+.section-comment {
+  color: var(--comment);
+  font-size: 12px;
+  font-style: italic;
+  margin-bottom: 24px;
+}
+
+/* experience */
+.exp-entry {
+  margin-bottom: 36px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--border-light);
+}
+.exp-entry:last-child { border-bottom: none; }
+
+.exp-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.exp-company { font-size: 18px; font-weight: 500; color: var(--text); font-family: 'Newsreader', serif; }
+.exp-role { font-size: 12px; color: var(--accent); margin-bottom: 2px; font-style: italic; }
+.exp-meta { font-size: 11px; color: var(--text-muted); }
+.exp-date { font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+
+.exp-bullets {
+  list-style: none;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.exp-bullets li {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  padding-left: 16px;
+  position: relative;
+}
+
+.exp-bullets li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--accent-soft);
+}
+
+/* projects */
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.project-card {
+  background: var(--sidebar-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.project-card:hover {
+  border-color: var(--accent-soft);
+  box-shadow: 0 4px 20px rgba(201, 84, 122, 0.08);
+  transform: translateY(-2px);
+}
+
+.project-num { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; }
+.project-name { font-family: 'Newsreader', serif; font-size: 22px; font-weight: 400; margin-bottom: 8px; color: var(--text); }
+.project-desc { font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+
+.project-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.stack-tag {
+  font-size: 10px;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-muted);
+  background: var(--bg);
+}
+
+.project-links { display: flex; gap: 12px; }
+.project-link {
+  font-size: 11px;
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.15s;
+}
+.project-link:hover { opacity: 0.7; }
+
+/* skills */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.skill-category { }
+.skill-cat-name {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.skill-items { display: flex; flex-wrap: wrap; gap: 6px; }
+.skill-item {
+  font-size: 11px;
+  color: var(--text);
+  background: var(--sidebar-bg);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+/* about */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 48px;
+}
+
+.about-headline {
+  font-family: 'Newsreader', serif;
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+.about-headline em { font-style: italic; color: var(--accent); }
+
+.about-body {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+.about-body p { margin-bottom: 14px; }
+
+.edu-card {
+  background: var(--sidebar-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.edu-degree { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+.edu-school { font-size: 11px; color: var(--text-muted); margin-bottom: 3px; }
+.edu-year { font-size: 10px; color: var(--text-dim); }
+.edu-grade {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 10px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width: 768px) {
+  body { height: 100dvh; overflow: hidden; }
+
+  .title-bar { padding: 0 12px; }
+  .title-bar-text { font-size: 10px; }
+
+  .menu-bar { overflow-x: auto; gap: 0; }
+  .menu-item { padding: 2px 6px; font-size: 10px; white-space: nowrap; }
+
+  /* hide activity bar and sidebar on mobile */
+  .activity-bar { display: none; }
+  .sidebar { display: none; }
+
+  /* editor takes full width */
+  .editor-area { width: 100%; }
+
+  /* tab bar scrollable */
+  .tab-bar { overflow-x: auto; flex-wrap: nowrap; }
+  .tab { font-size: 11px; padding: 0 10px; flex-shrink: 0; }
+
+  /* home panel */
+  .home-panel { padding: 28px 20px 40px; }
+  .home-name { font-size: clamp(36px, 10vw, 60px); }
+  .home-bio { font-size: 15px; }
+  .home-stats { grid-template-columns: repeat(2, 1fr); max-width: 100%; }
+  .home-btns { gap: 8px; }
+  .btn { font-size: 10px; padding: 8px 14px; }
+  .home-connect { flex-wrap: wrap; gap: 10px; }
+
+  /* section panels */
+  .section-panel { padding: 20px 16px 40px; max-width: 100% !important; }
+
+  /* line numbers hidden on mobile */
+  .line-numbers { display: none; }
+  .code-area { padding: 16px 0 16px 16px; }
+
+  /* projects grid single column */
+  .projects-grid { grid-template-columns: 1fr; gap: 16px; }
+
+  /* skills grid single column */
+  .skills-grid { grid-template-columns: 1fr; gap: 16px; }
+
+  /* about grid single column */
+  .about-grid { grid-template-columns: 1fr; gap: 28px; }
+  .about-headline { font-size: 28px; }
+
+  /* experience */
+  .exp-header { flex-direction: column; gap: 4px; }
+  .exp-date { font-size: 10px; }
+  .exp-company { font-size: 16px; }
+
+  /* contact */
+  .section-panel > div[style*="font-size:42px"] { font-size: 28px !important; }
+
+  /* copilot panel full width on mobile */
+  .copilot-panel { width: 100%; }
+
+  /* status bar */
+  .status-bar { padding: 0 8px; gap: 8px; }
+  .status-item { font-size: 9px; }
+
+  /* mobile bottom nav */
+  .mobile-nav {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-nav { display: none !important; }
+}
+
+/* ── MOBILE BOTTOM NAV ── */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 22px; /* above status bar */
+  left: 0;
+  right: 0;
+  background: var(--tab-bar);
+  border-top: 1px solid var(--border);
+  z-index: 50;
+  overflow-x: auto;
+  padding: 0 4px;
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+  min-width: 60px;
+  transition: all 0.15s;
+}
+
+.mobile-nav-item.active .mnav-dot { background: var(--accent); }
+.mobile-nav-item.active .mnav-label { color: var(--accent); }
+
+.mnav-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  transition: background 0.15s;
+}
+
+.mnav-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .editor-content { padding-bottom: 52px; }
+  .status-bar { bottom: 0; position: fixed; width: 100%; }
+  body { padding-bottom: 0; }
+}
+
+/* animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.home-panel > * {
+  animation: fadeIn 0.5s ease forwards;
+  opacity: 0;
+}
+.home-panel > *:nth-child(1) { animation-delay: 0.05s; }
+.home-panel > *:nth-child(2) { animation-delay: 0.1s; }
+.home-panel > *:nth-child(3) { animation-delay: 0.18s; }
+.home-panel > *:nth-child(4) { animation-delay: 0.25s; }
+.home-panel > *:nth-child(5) { animation-delay: 0.32s; }
+.home-panel > *:nth-child(6) { animation-delay: 0.4s; }
+.home-panel > *:nth-child(7) { animation-delay: 0.48s; }
+.home-panel > *:nth-child(8) { animation-delay: 0.55s; }
+
+.breadcrumb {
+  font-size: 11px;
+  color: var(--text-dim);
+  padding: 6px 20px;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg);
+  flex-shrink: 0;
+}
+
+.breadcrumb span { color: var(--text-muted); }
+.breadcrumb .current { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- TITLE BAR -->
+<div class="title-bar">
+  <div class="traffic-lights">
+    <div class="traffic-light tl-red"></div>
+    <div class="traffic-light tl-yellow"></div>
+    <div class="traffic-light tl-green"></div>
+  </div>
+  <div class="title-bar-text">anushka-sharma · portfolio</div>
+</div>
+
+<!-- MENU BAR -->
+<div class="menu-bar">
+  <div class="menu-item">File</div>
+  <div class="menu-item">Edit</div>
+  <div class="menu-item">View</div>
+  <div class="menu-item">Go</div>
+  <div class="menu-item">Run</div>
+  <div class="menu-item">Terminal</div>
+  <div class="menu-item">Help</div>
+  <div class="menu-item" style="margin-left:auto; color: var(--accent); cursor:pointer;" onclick="openCopilot()">✦ Copilot</div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="ide-layout">
+
+  <!-- ACTIVITY BAR -->
+  <div class="activity-bar">
+    <div class="activity-icon active" onclick="showExplorer()" title="Explorer">⊞</div>
+    <div class="activity-icon" title="Search">⌕</div>
+    <div class="activity-icon" title="Source Control">⎇</div>
+    <div class="activity-icon" title="Extensions">⧉</div>
+    <div class="activity-icon activity-bottom" title="Settings">⚙</div>
+    <div class="activity-icon" title="Account">◉</div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">Explorer</div>
+    <div class="sidebar-section">
+      <div class="sidebar-folder">
+        <span>▾</span>
+        <span style="font-size:12px;">anushka-sharma</span>
+      </div>
+      <div class="sidebar-file active" onclick="openTab('home')" id="file-home">
+        <div class="file-dot dot-pink"></div>
+        home.tsx
+      </div>
+      <div class="sidebar-file" onclick="openTab('experience')" id="file-experience">
+        <div class="file-dot dot-orange"></div>
+        experience.ts
+      </div>
+      <div class="sidebar-file" onclick="openTab('projects')" id="file-projects">
+        <div class="file-dot dot-blue"></div>
+        projects.js
+      </div>
+      <div class="sidebar-file" onclick="openTab('skills')" id="file-skills">
+        <div class="file-dot dot-green"></div>
+        skills.json
+      </div>
+      <div class="sidebar-file" onclick="openTab('about')" id="file-about">
+        <div class="file-dot dot-yellow"></div>
+        about.html
+      </div>
+      <div class="sidebar-file" onclick="openTab('contact')" id="file-contact">
+        <div class="file-dot dot-purple"></div>
+        contact.css
+      </div>
+      <div class="sidebar-file" onclick="openTab('readme')" id="file-readme">
+        <div class="file-dot dot-white"></div>
+        README.md
+      </div>
+    </div>
+  </div>
+
+  <!-- EDITOR AREA -->
+  <div class="editor-area">
+
+    <!-- TAB BAR -->
+    <div class="tab-bar">
+      <div class="tab active" id="tab-home" onclick="openTab('home')">
+        <div class="file-dot dot-pink"></div>
+        home.tsx
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <div class="editor-content active" id="content-home">
+      <div class="home-panel">
+        <div class="home-comment">// hello world - welcome to my portfolio</div>
+        <div class="home-name">Anushka <span class="pink">Sharma</span></div>
+        <div class="home-tags">
+          <div class="home-tag"><div class="dot"></div> Engineering Undergrad</div>
+          <div class="home-tag"><div class="dot"></div> CS Minor · GGSIPU</div>
+          <div class="home-tag" style="border-color: var(--accent-soft); color: var(--accent);">⬤ Open to Internships</div>
+        </div>
+        <div class="home-bio">
+          Building full-stack systems and shipping products. From defence research labs to Vercel deployments.
+        </div>
+        <div class="home-stats">
+          <div class="stat-cell">
+            <div class="stat-val">3rd</div>
+            <div class="stat-lbl">Year</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-val">3</div>
+            <div class="stat-lbl">Internships</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-val">2</div>
+            <div class="stat-lbl">Projects</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-val">∞</div>
+            <div class="stat-lbl">Curiosity</div>
+          </div>
+        </div>
+        <div class="home-btns">
+          <a href="#" class="btn btn-primary" onclick="openTab('projects'); return false;">⊞ Projects</a>
+          <a href="#" class="btn btn-secondary" onclick="openTab('about'); return false;">◉ About Me</a>
+          <a href="#" class="btn btn-secondary" onclick="openTab('contact'); return false;">✉ Contact</a>
+          <a href="#" class="btn btn-secondary" onclick="openCopilot(); return false;">✦ Copilot</a>
+        </div>
+        <div class="home-connect">
+          <a href="https://github.com/anushkasharmaa1" target="_blank" class="connect-link">⌥ GitHub</a>
+          <a href="LINKEDIN_URL" target="_blank" class="connect-link">in LinkedIn</a>
+          <a href="mailto:anushkasharma1785@gmail.com" class="connect-link">✉ Email</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div class="editor-content" id="content-experience">
+      <div class="line-numbers" id="ln-experience"></div>
+      <div class="code-area">
+        <div class="section-panel">
+          <div class="section-comment">// experience.ts - where I've worked</div>
+
+          <div class="exp-entry">
+            <div class="exp-header">
+              <div>
+                <div class="exp-company">Ramsun Network</div>
+                <div class="exp-role">IT Development Intern</div>
+                <div class="exp-meta">New Delhi</div>
+              </div>
+              <div class="exp-date">June 2025 to July 2025</div>
+            </div>
+            <ul class="exp-bullets">
+              <li>Implemented backend validation logic for a Supply Chain Finance (SCF) system, enforcing invoice-level constraints such as maturity date verification, duplicate detection, and funding limits using PostgreSQL</li>
+              <li>Designed and integrated logic-driven workflows that performed consistency checks on transactional data to ensure correctness and reliability in financial operations</li>
+            </ul>
+          </div>
+
+          <div class="exp-entry">
+            <div class="exp-header">
+              <div>
+                <div class="exp-company">Gisax Technologies</div>
+                <div class="exp-role">Digital Operations Intern</div>
+                <div class="exp-meta">New Delhi</div>
+              </div>
+              <div class="exp-date">July 2025 to August 2025</div>
+            </div>
+            <ul class="exp-bullets">
+              <li>Conducted structured research and data analysis to optimise digital content strategy and inform data-backed decisions for a B2B SaaS product's platform presence</li>
+            </ul>
+          </div>
+
+          <div class="exp-entry">
+            <div class="exp-header">
+              <div>
+                <div class="exp-company">DIPAS, DRDO</div>
+                <div class="exp-role">Research Intern</div>
+                <div class="exp-meta">New Delhi</div>
+              </div>
+              <div class="exp-date">July 2024 to August 2024</div>
+            </div>
+            <ul class="exp-bullets">
+              <li>Supported research-driven software workflows by performing data analysis and preprocessing tasks for human performance and defence-related studies</li>
+              <li>Contributed to the development and refinement of internal tools by translating research requirements into structured, usable software components</li>
+            </ul>
+          </div>
+
+          <div class="exp-entry">
+            <div class="exp-header">
+              <div>
+                <div class="exp-company">Enactus BVCOE</div>
+                <div class="exp-role">Joint Secretary</div>
+              </div>
+              <div class="exp-date">June 2025 to Present</div>
+            </div>
+            <ul class="exp-bullets">
+              <li>Led market research and problem analysis to define solution approaches for social entrepreneurship projects</li>
+              <li>Coordinated cross-functional teams and stakeholders to execute initiatives from ideation to implementation</li>
+            </ul>
+          </div>
+
+          <div class="exp-entry">
+            <div class="exp-header">
+              <div>
+                <div class="exp-company">Microsoft Learn Student Ambassadors</div>
+                <div class="exp-role">Core Member (MLSA)</div>
+              </div>
+              <div class="exp-date">June 2025 to Present</div>
+            </div>
+            <ul class="exp-bullets">
+              <li>Organised and supported peer-learning sessions and technical workshops focused on software development and problem-solving</li>
+              <li>Collaborated with student communities to promote structured learning and hands-on technical engagement</li>
+            </ul>
+          </div>
+
+          <div class="exp-entry">
+            <div class="exp-header">
+              <div>
+                <div class="exp-company">SFS MUN</div>
+                <div class="exp-role">Deputy Director General</div>
+                <div class="exp-meta">New Delhi</div>
+              </div>
+              <div class="exp-date">2022</div>
+            </div>
+            <ul class="exp-bullets">
+              <li>Led end-to-end coordination of the Model United Nations conference, managing committee operations, delegate experience, and crisis resolution</li>
+              <li>Collaborated with the Secretariat to oversee agenda setting, chairperson selection, and delegate engagement</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="editor-content" id="content-projects">
+      <div class="line-numbers" id="ln-projects"></div>
+      <div class="code-area">
+        <div class="section-panel" style="max-width: 100%;">
+          <div class="section-comment">// projects.js - things I've built and shipped</div>
+          <div class="projects-grid">
+
+            <div class="project-card">
+              <div class="project-num">01 · FINANCIAL TECHNOLOGY</div>
+              <div class="project-name">Splitwisely</div>
+              <div class="project-desc">A full-stack expense-splitting web app enabling users to create groups, add expenses, and automatically calculate and settle shared balances. Real-time dashboard with balance tracking, category-based expense management, and an activity feed.</div>
+              <div class="project-stack">
+                <span class="stack-tag">Next.js</span>
+                <span class="stack-tag">TypeScript</span>
+                <span class="stack-tag">Prisma</span>
+                <span class="stack-tag">PostgreSQL</span>
+                <span class="stack-tag">Clerk</span>
+                <span class="stack-tag">Neon</span>
+                <span class="stack-tag">Tailwind</span>
+                <span class="stack-tag">Vercel</span>
+              </div>
+              <div class="project-links">
+                <a href="https://splitwisely-beige.vercel.app" class="project-link" target="_blank">⬡ Live ↗</a>
+                <a href="#" class="project-link">⌥ GitHub ↗</a>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-num">02 · AI & FASHION</div>
+              <div class="project-name">Aura</div>
+              <div class="project-desc">An AI stylist app for wardrobe management and outfit curation — blending computer vision with personal style intelligence. Clean, editorial mobile-first UI with background removal and cost-per-wear tracking.</div>
+              <div class="project-stack">
+                <span class="stack-tag">Next.js</span>
+                <span class="stack-tag">Supabase</span>
+                <span class="stack-tag">Tailwind</span>
+              </div>
+              <div class="project-links">
+                <a href="#" class="project-link">⌥ GitHub ↗</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="editor-content" id="content-skills">
+      <div class="line-numbers" id="ln-skills"></div>
+      <div class="code-area">
+        <div class="section-panel">
+          <div class="section-comment">// skills.json - tools I've actually used</div>
+          <div class="skills-grid">
+            <div class="skill-category">
+              <div class="skill-cat-name">Languages</div>
+              <div class="skill-items">
+                <span class="skill-item">TypeScript</span>
+                <span class="skill-item">Java</span>
+                <span class="skill-item">SQL</span>
+              </div>
+            </div>
+            <div class="skill-category">
+              <div class="skill-cat-name">Frameworks</div>
+              <div class="skill-items">
+                <span class="skill-item">Next.js</span>
+                <span class="skill-item">Prisma ORM</span>
+                <span class="skill-item">Tailwind CSS</span>
+              </div>
+            </div>
+            <div class="skill-category">
+              <div class="skill-cat-name">Database & Backend</div>
+              <div class="skill-items">
+                <span class="skill-item">PostgreSQL</span>
+                <span class="skill-item">Supabase</span>
+                <span class="skill-item">Neon</span>
+              </div>
+            </div>
+            <div class="skill-category">
+              <div class="skill-cat-name">Auth & Infra</div>
+              <div class="skill-items">
+                <span class="skill-item">Clerk</span>
+                <span class="skill-item">Vercel</span>
+                <span class="skill-item">Git</span>
+                <span class="skill-item">GitHub</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="editor-content" id="content-about">
+      <div class="line-numbers" id="ln-about"></div>
+      <div class="code-area">
+        <div class="section-panel" style="max-width: 100%;">
+          <div class="section-comment">// about.html — the person behind the code</div>
+          <div class="about-grid">
+            <div>
+              <div class="about-headline">
+                Engineering Undergrad.<br>CS Minor.<br><em>Full-Stack Builder.</em>
+              </div>
+              <div class="about-body">
+                <p>Third year of a B.Tech Engineering degree with a CS Minor at GGSIPU, New Delhi. Graduating 2027.</p>
+                <p>From research at DRDO to shipping full-stack apps on Vercel, I build things because problems interest me.</p>
+                <p>Currently exploring data engineering through Python and SQL.</p>
+                <p>Working towards a backend engineering role. Long-term goal is ISB PGP YL.</p>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); margin-bottom:16px;">Education</div>
+              <div class="edu-card">
+                <div class="edu-degree">B.Tech Engineering + CS Minor</div>
+                <div class="edu-school">GGSIPU, New Delhi</div>
+                <div class="edu-year">2023 to 2027</div>
+                <span class="edu-grade">CGPA: 7.78</span>
+              </div>
+              <div class="edu-card">
+                <div class="edu-degree">Senior Secondary (Non-Medical)</div>
+                <div class="edu-school">St. Francis De Sales Senior Secondary School</div>
+                <div class="edu-year">2021 to 2023</div>
+                <span class="edu-grade">84%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="editor-content" id="content-contact">
+      <div class="line-numbers" id="ln-contact"></div>
+      <div class="code-area">
+        <div class="section-panel">
+          <div class="section-comment">// contact.css</div>
+          <div style="font-family:'Newsreader',serif; font-size:42px; font-weight:300; margin-bottom:8px; line-height:1.1;">
+            Let's Build <em style="color:var(--accent); font-style:italic;">Something.</em>
+          </div>
+          <p style="font-size:13px; color:var(--text-muted); margin-bottom:32px; line-height:1.7;">Open to internships and collaborations in backend engineering and full-stack development. Every great project starts with a conversation.</p>
+
+          <div style="display:flex; flex-direction:column; gap:0; max-width:480px;">
+            <a href="mailto:anushkasharma1785@gmail.com" target="_blank" style="display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-bottom:1px solid var(--border); text-decoration:none; color:var(--text); font-size:13px; transition:color 0.15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'">
+              <span>anushkasharma1785@gmail.com</span>
+              <span>→</span>
+            </a>
+            <a href="LINKEDIN_URL" target="_blank" style="display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-bottom:1px solid var(--border); text-decoration:none; color:var(--text); font-size:13px; transition:color 0.15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'">
+              <span>LinkedIn</span>
+              <span>→</span>
+            </a>
+            <a href="https://github.com/anushkasharmaa1" target="_blank" style="display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-bottom:1px solid var(--border); text-decoration:none; color:var(--text); font-size:13px; transition:color 0.15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'">
+              <span>GitHub</span>
+              <span>→</span>
+            </a>
+            <a href="RESUME_URL" target="_blank" style="display:flex; justify-content:space-between; align-items:center; padding:16px 0; text-decoration:none; color:var(--text); font-size:13px; transition:color 0.15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'">
+              <span>Resume PDF</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- README -->
+    <div class="editor-content" id="content-readme">
+      <div class="line-numbers" id="ln-readme"></div>
+      <div class="code-area">
+        <div class="section-panel">
+          <div class="section-comment">// README.md</div>
+          <div style="font-family:'Newsreader',serif; font-size:28px; font-weight:300; margin-bottom:16px;">Engineering Undergrad · CS Minor · New Delhi <span style="font-size:16px;">🇮🇳</span></div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px;">
+            <span class="stack-tag" style="background:var(--accent-bg); border-color:var(--accent-soft); color:var(--accent);">Next.js</span>
+            <span class="stack-tag" style="background:var(--accent-bg); border-color:var(--accent-soft); color:var(--accent);">TypeScript</span>
+            <span class="stack-tag" style="background:var(--accent-bg); border-color:var(--accent-soft); color:var(--accent);">PostgreSQL</span>
+            <span class="stack-tag" style="background:var(--accent-bg); border-color:var(--accent-soft); color:var(--accent);">Supabase</span>
+          </div>
+          <div style="font-size:13px; color:var(--text-muted); line-height:1.8; max-width:560px;">
+            <p style="margin-bottom:12px;"><strong style="color:var(--text);">About</strong><br>Building full-stack apps and exploring data engineering. B.Tech Engineering with a CS Minor at GGSIPU. I ship things, then make them better.</p>
+            <p style="margin-bottom:12px;"><strong style="color:var(--text);">Connect</strong><br>
+              <a href="mailto:anushkasharma1785@gmail.com" style="color:var(--accent); text-decoration:none;">anushkasharma1785@gmail.com</a>
+              &nbsp;·&nbsp;
+              <a href="https://github.com/anushkasharmaa1" target="_blank" style="color:var(--accent); text-decoration:none;">GitHub</a>
+              &nbsp;·&nbsp;
+              <a href="LINKEDIN_URL" target="_blank" style="color:var(--accent); text-decoration:none;">LinkedIn</a>
+              &nbsp;·&nbsp;
+              <a href="RESUME_URL" target="_blank" style="color:var(--accent); text-decoration:none;">Resume</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end editor-area -->
+</div><!-- end ide-layout -->
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mobile-nav" id="mobile-nav">
+  <div class="mobile-nav-item active" onclick="openTab('home')" id="mnav-home">
+    <div class="mnav-dot dot-pink"></div>
+    <div class="mnav-label">home</div>
+  </div>
+  <div class="mobile-nav-item" onclick="openTab('experience')" id="mnav-experience">
+    <div class="mnav-dot dot-orange"></div>
+    <div class="mnav-label">exp</div>
+  </div>
+  <div class="mobile-nav-item" onclick="openTab('projects')" id="mnav-projects">
+    <div class="mnav-dot dot-blue"></div>
+    <div class="mnav-label">projects</div>
+  </div>
+  <div class="mobile-nav-item" onclick="openTab('skills')" id="mnav-skills">
+    <div class="mnav-dot dot-green"></div>
+    <div class="mnav-label">skills</div>
+  </div>
+  <div class="mobile-nav-item" onclick="openTab('about')" id="mnav-about">
+    <div class="mnav-dot dot-yellow"></div>
+    <div class="mnav-label">about</div>
+  </div>
+  <div class="mobile-nav-item" onclick="openTab('contact')" id="mnav-contact">
+    <div class="mnav-dot dot-purple"></div>
+    <div class="mnav-label">contact</div>
+  </div>
+  <div class="mobile-nav-item" onclick="openCopilot()">
+    <div class="mnav-dot" style="background: var(--keyword);"></div>
+    <div class="mnav-label">✦ AI</div>
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="status-item">⎇ main</div>
+  <div class="status-item">↻</div>
+  <div class="status-item" id="status-file">Anushka's Portfolio</div>
+  <div class="status-right">
+    <div class="status-item">UTF-8</div>
+    <div class="status-item">TypeScript</div>
+    <div class="status-item" onclick="openCopilot()" style="cursor:pointer; opacity:0.9;">✦ Copilot</div>
+  </div>
+</div>
+
+<!-- COPILOT OVERLAY -->
+<div class="copilot-overlay" id="copilot-overlay" onclick="handleOverlayClick(event)">
+  <div class="copilot-panel" id="copilot-panel">
+    <div class="copilot-header">
+      <div class="copilot-title">
+        <div class="copilot-avatar">🌸</div>
+        <div>
+          <div class="copilot-name">Anushka's Copilot</div>
+          <div class="copilot-sub">portfolio · anushka-sharma</div>
+        </div>
+      </div>
+      <div class="copilot-close" onclick="closeCopilot()">✕</div>
+    </div>
+
+    <div class="copilot-body" id="copilot-body">
+      <div class="copilot-greeting">
+        <div class="big-avatar">🌸</div>
+        <h3>Hi! I'm Anushka's Copilot ✦</h3>
+        <p>Ask me anything about her projects, skills, experience, or background.</p>
+      </div>
+
+      <div class="copilot-suggestions">
+        <div class="suggestion-chip" onclick="askCopilot('Tell me about Anushka')">Tell me about Anushka</div>
+        <div class="suggestion-chip" onclick="askCopilot('What projects has she built?')">What projects has she built?</div>
+        <div class="suggestion-chip" onclick="askCopilot('What is her work experience?')">Her work experience</div>
+        <div class="suggestion-chip" onclick="askCopilot('What is her tech stack?')">Her tech stack</div>
+        <div class="suggestion-chip" onclick="askCopilot('How can I contact Anushka?')">How to contact her</div>
+        <div class="suggestion-chip" onclick="askCopilot('What is she currently learning?')">What is she learning?</div>
+      </div>
+
+      <div class="copilot-messages" id="copilot-messages"></div>
+    </div>
+
+    <div class="copilot-footer">
+      <div class="copilot-input-row">
+        <input type="text" class="copilot-input" id="copilot-input" placeholder="Ask about Anushka's projects, skills..." onkeydown="if(event.key==='Enter') sendCopilot()" />
+        <button class="copilot-send" onclick="sendCopilot()">→</button>
+      </div>
+      <div class="copilot-hint">AI can make mistakes · Contact Anushka directly for important info</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── TAB SYSTEM ──
+const TABS = ['home','experience','projects','skills','about','contact','readme'];
+
+function openTab(id) {
+  TABS.forEach(function(t) {
+    var content = document.getElementById('content-' + t);
+    var fileEl = document.getElementById('file-' + t);
+    var tabEl = document.getElementById('tab-' + t);
+    var mnavEl = document.getElementById('mnav-' + t);
+    if (content) content.style.display = (t === id) ? 'flex' : 'none';
+    if (fileEl) fileEl.classList.toggle('active', t === id);
+    if (tabEl) tabEl.classList.toggle('active', t === id);
+    if (mnavEl) mnavEl.classList.toggle('active', t === id);
+  });
+  var statusEl = document.getElementById('status-file');
+  var labels = {
+    home: 'home.tsx', experience: 'experience.ts', projects: 'projects.js',
+    skills: 'skills.json', about: 'about.html', contact: 'contact.css', readme: 'README.md'
+  };
+  if (statusEl) statusEl.textContent = labels[id] || id;
+}
+
+// ── COPILOT ──
+function openCopilot() {
+  document.getElementById('copilot-overlay').classList.add('open');
+}
+
+function closeCopilot() {
+  document.getElementById('copilot-overlay').classList.remove('open');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('copilot-overlay')) closeCopilot();
+}
+
+function askCopilot(question) {
+  document.getElementById('copilot-input').value = question;
+  sendCopilot();
+}
+
+var RESPONSES = [
+  {
+    keys: ['who is','about anushka','tell me','introduce','herself'],
+    reply: "Anushka Sharma is a third-year Engineering Undergrad with a CS Minor at GGSIPU, New Delhi — She builds full-stack products, has interned at DRDO and Ramsun Network, and is currently exploring data engineering through Python and SQL. Graduating 2027. Long-term goal: ISB PGP YL."
+  },
+  {
+    keys: ['project','built','splitwisely','aura','ship'],
+    reply: "Anushka has built two projects: Splitwisely, a full-stack expense-splitting app using Next.js, TypeScript, Prisma, PostgreSQL, Clerk, and Neon (live at splitwisely-beige.vercel.app), and Aura, a wardrobe stylist app built with Next.js, Supabase, and Tailwind."
+  },
+  {
+    keys: ['splitwisely','expense','split'],
+    reply: "Splitwisely is a full-stack expense-splitting web app built from scratch. It uses Next.js, TypeScript, Prisma ORM, PostgreSQL on Neon, Clerk auth, and Tailwind. Live at splitwisely-beige.vercel.app."
+  },
+  {
+    keys: ['aura','wardrobe','stylist','fashion'],
+    reply: "Aura is a wardrobe management and outfit curation app built with Next.js, Supabase, and Tailwind. It focuses on cost-per-wear tracking and personal style curation."
+  },
+  {
+    keys: ['experience','work','intern','internship','job'],
+    reply: "Anushka has interned at Ramsun Network (IT Development, PostgreSQL backend for a Supply Chain Finance system), DIPAS/DRDO (Research Intern, data analysis for defence studies), and Gisax Technologies (Digital Operations, B2B SaaS data analysis). She's also Joint Secretary at Enactus BVCOE and a Core Member of MLSA."
+  },
+  {
+    keys: ['drdo','dipas','defence','defense','research'],
+    reply: "Anushka interned at DIPAS, DRDO (July–August 2024) in New Delhi — supporting research-driven software workflows, performing data analysis for human performance studies, and building internal tools for defence research."
+  },
+  {
+    keys: ['ramsun','network','supply chain','scf','finance'],
+    reply: "At Ramsun Network (June–July 2025), Anushka implemented backend validation logic for a Supply Chain Finance system — enforcing invoice constraints, duplicate detection, and funding limits using PostgreSQL."
+  },
+  {
+    keys: ['stack','tech','skills','language','framework','tools','use'],
+    reply: "Anushka's stack: TypeScript, Java, SQL — Next.js, Prisma ORM, Tailwind CSS — PostgreSQL, Supabase, Neon — Clerk, Vercel, Git. She's currently exploring data engineering through Python and SQL."
+  },
+  {
+    keys: ['education','degree','college','university','ggsipu','school','cgpa','grade'],
+    reply: "Anushka is pursuing a B.Tech in Engineering with a CS Minor at GGSIPU, New Delhi (2023–2027), with a CGPA of 7.78. She completed her Class XII at St. Francis De Sales Senior Secondary School with 84%."
+  },
+  {
+    keys: ['contact','email','reach','hire','opportunity','available','open'],
+    reply: "Anushka is open to internships and backend engineering opportunities! Reach her at anushkasharma1785@gmail.com or connect on LinkedIn and GitHub (anushkasharmaa1)."
+  },
+  {
+    keys: ['goal','future','plan','isb','mba','pgp'],
+    reply: "Anushka's near-term goal is a backend/data engineering internship converting to a full-time role. Long-term, she's targeting ISB PGP YL — building the profile through strong technical work and leadership before applying."
+  },
+  {
+    keys: ['learning','currently','python','sql','data engineering'],
+    reply: "Anushka is currently exploring data engineering through Python and SQL — building on her existing backend foundation in TypeScript and PostgreSQL to move into data systems."
+  },
+  {
+    keys: ['enactus','mlsa','microsoft','leadership','mun','sfs'],
+    reply: "Beyond tech, Anushka is Joint Secretary at Enactus BVCOE (social entrepreneurship), a Core Member of Microsoft Learn Student Ambassadors (MLSA), and was Deputy Director General at SFS MUN in 2022."
+  },
+  {
+    keys: ['github','linkedin','resume','cv','portfolio'],
+    reply: "Find Anushka's work at GitHub (anushkasharmaa1), LinkedIn, and her live project at splitwisely-beige.vercel.app. You can also reach her at anushkasharma1785@gmail.com for her resume."
+  }
+];
+
+var DEFAULT_REPLY = "Great question! For anything specific not covered here, reach Anushka directly at anushkasharma1785@gmail.com — she's always happy to chat about her work.";
+
+function getReply(question) {
+  var q = question.toLowerCase();
+  for (var i = 0; i < RESPONSES.length; i++) {
+    var keys = RESPONSES[i].keys;
+    for (var j = 0; j < keys.length; j++) {
+      if (q.indexOf(keys[j]) !== -1) {
+        return RESPONSES[i].reply;
+      }
+    }
+  }
+  return DEFAULT_REPLY;
+}
+
+function sendCopilot() {
+  var input = document.getElementById('copilot-input');
+  var question = input.value.trim();
+  if (!question) return;
+  input.value = '';
+
+  var msgs = document.getElementById('copilot-messages');
+  var suggestions = document.querySelector('.copilot-suggestions');
+  if (suggestions) suggestions.style.display = 'none';
+
+  var userMsg = document.createElement('div');
+  userMsg.className = 'msg msg-user';
+  userMsg.innerHTML = '<div class="msg-label">You</div><div class="msg-bubble">' + question + '</div>';
+  msgs.appendChild(userMsg);
+
+  var body = document.getElementById('copilot-body');
+  body.scrollTop = body.scrollHeight;
+
+  setTimeout(function() {
+    var reply = getReply(question);
+    var aiMsg = document.createElement('div');
+    aiMsg.className = 'msg msg-ai';
+    aiMsg.innerHTML = '<div class="msg-label">Copilot</div><div class="msg-bubble">' + reply + '</div>';
+    msgs.appendChild(aiMsg);
+    body.scrollTop = body.scrollHeight;
+  }, 400);
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', function() {
+  openTab('home');
+});
+</script>
+</body>
+</html>
